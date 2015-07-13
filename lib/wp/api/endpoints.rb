@@ -17,6 +17,14 @@ module WP::API
       resource_subpath('posts', id, 'meta', query).first
     end
 
+    def comments(query = {})
+      resources('comments', query)
+    end
+
+    def post_comments(id, query = {})
+      resource('comments', id, query)
+    end
+
     def pages(query = {})
       resources('pages', query)
     end
@@ -47,7 +55,7 @@ module WP::API
     end
 
     def resource(res, id, query = {})
-      resource_class(res).new *get("#{res}/#{id}", query)
+      get("#{res}/#{id}", query)
     end
 
     def resource_subpath(res, id, subpath, query = {})

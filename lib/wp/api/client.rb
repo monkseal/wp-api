@@ -12,11 +12,12 @@ module WP::API
 
     DIRECT_PARAMS = %w(type context filter)
 
-    def initialize(host:, scheme: 'http', user: nil, password: nil)
-      @scheme = scheme
-      @host = host
-      @user = user
+    def initialize(host:, scheme: 'http', user: nil, password: nil, v: 1)
+      @scheme   = scheme
+      @host     = host
+      @user     = user
       @password = password
+      @verison  = v
 
       fail ':host is required' unless host.is_a?(String) && host.length > 0
     end
@@ -54,7 +55,9 @@ module WP::API
     end
 
     def url_for(fragment, query)
-      url = "#{@scheme}://#{@host}/wp-json/#{fragment}"
+      base = 'wp-json'
+      base = 'wp-json/wp/v2' if @verison == 2
+      url = "#{@scheme}://#{@host}/#{base}/#{fragment}"
       url << ("?" + params(query)) unless query.empty?
 
       url
