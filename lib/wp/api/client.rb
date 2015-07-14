@@ -28,7 +28,7 @@ module WP::API
 
     protected
 
-    def get(resource, query = {})
+    def get_request(resource, query = {})
       should_raise_on_empty = query.delete(:should_raise_on_empty) || true
       query = ActiveSupport::HashWithIndifferentAccess.new(query)
       path = url_for(resource, query)
@@ -45,6 +45,25 @@ module WP::API
         raise WP::API::ResourceNotFoundError
       else
         [ response.parsed_response, response.headers ] # Already parsed.
+      end
+    end
+
+    def post_request(resource, data = {})
+      should_raise_on_empty = data.delete(:should_raise_on_empty) || true
+      path = url_for(resource, {})
+
+      response = if authenticate?
+        Client.post(path, { :body => data, basic_auth: { username: @user, password: @password } })
+      else
+        Client.post(path, { :body => data })
+      end
+
+      if !(200..201).include? response.code
+        raise WP::API::ResourceNotFoundError
+      elsif (response.parsed_response.nil? || response.parsed_response.empty?) && should_raise_on_empty
+        raise WP::API::ResourceNotFoundError
+      else
+        response.parsed_response
       end
     end
 

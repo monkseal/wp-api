@@ -22,7 +22,11 @@ module WP::API
     end
 
     def post_comments(id, query = {})
-      resource('comments', id, query)
+      resource('comments', query)
+    end
+
+    def create_comment(data = {})
+      resource_post('comments', data)
     end
 
     def pages(query = {})
@@ -48,19 +52,23 @@ module WP::API
     private
 
     def resources(res, query = {})
-      resources, headers = get(res, query)
+      resources, headers = get_request(res, query)
       resources.collect do |hash|
         resource_class(res).new(hash, headers)
       end
     end
 
     def resource(res, id, query = {})
-      get("#{res}/#{id}", query)
+      get_request("#{res}/#{id}", query)
+    end
+
+    def resource_post(res, data = {})
+      post_request("#{res}", data)
     end
 
     def resource_subpath(res, id, subpath, query = {})
       query.merge(should_raise_on_empty: false)
-      get("#{res}/#{id}/#{subpath}", query)
+      get_request("#{res}/#{id}/#{subpath}", query)
     end
 
     def resource_named(res, slug)
