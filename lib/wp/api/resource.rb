@@ -11,7 +11,7 @@ module WP::API
     end
 
     def id
-      attributes['ID']
+      attributes['id']
     end
 
     def meta(client = nil)
@@ -55,7 +55,8 @@ module WP::API
     end
 
     def _remove_entities(string)
-      HTMLEntities.new.decode(string.gsub('&amp;','&'))
+      return HTMLEntities.new.decode(string.gsub('&amp;','&')) if string.is_a? (String)
+      string
     end
 
     def _downcase_keys(hash)
