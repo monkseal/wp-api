@@ -20,6 +20,11 @@ module WP::API
       client.tags query.merge(post: id)
     end
 
+    def author(client = nil, query = {})
+      return if client.nil?
+      client.user attributes['author'], query
+    end
+
     def prev
       item = link_header_items.find {|rel, url| rel == "prev" }
       item.last if item

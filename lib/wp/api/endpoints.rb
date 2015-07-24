@@ -57,6 +57,14 @@ module WP::API
       end
     end
 
+    def users(query = {})
+      resources('users', query)
+    end
+
+    def user(id, query = {})
+      resource('users', id, query)
+    end
+
     private
 
     def resources(res, query = {})
