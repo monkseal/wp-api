@@ -12,17 +12,17 @@ module WP::API
 
     def categories(client = nil, query = {})
       return if client.nil?
-      client.categories query.merge(post: id)
+      attributes['categories'] ||= client.categories query.merge(post: id)
     end
 
     def tags(client = nil, query = {})
       return if client.nil?
-      client.tags query.merge(post: id)
+      attributes['tags'] ||= client.tags query.merge(post: id)
     end
 
     def author(client = nil, query = {})
       return if client.nil?
-      client.user attributes['author'], query
+      attributes['author_data'] ||= client.user attributes['author'], query
     end
 
     def prev
