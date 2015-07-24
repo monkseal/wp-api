@@ -21,8 +21,8 @@ module WP::API
       resources('comments', query)
     end
 
-    def post_comments(id, query = {})
-      resource('comments', query)
+    def comment(id, query = {})
+      resource('comments', id, query)
     end
 
     def create_comment(data = {})
@@ -59,11 +59,13 @@ module WP::API
     end
 
     def resource(res, id, query = {})
-      get_request("#{res}/#{id}", query)
+      resources, headers = get_request("#{res}/#{id}", query)
+      resource_class(res).new(resources, headers)
     end
 
     def resource_post(res, data = {})
-      post_request("#{res}", data)
+      resources, headers = post_request("#{res}", data)
+      resource_class(res).new(resources, headers)
     end
 
     def resource_subpath(res, id, subpath, query = {})

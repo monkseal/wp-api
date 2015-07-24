@@ -44,7 +44,7 @@ module WP::API
       elsif response.parsed_response.empty? && should_raise_on_empty
         raise WP::API::ResourceNotFoundError
       else
-        [ response.parsed_response, response.headers ] # Already parsed.
+        [ response.parsed_response, response.headers ]
       end
     end
 
@@ -63,7 +63,7 @@ module WP::API
       elsif (response.parsed_response.nil? || response.parsed_response.empty?) && should_raise_on_empty
         raise WP::API::ResourceNotFoundError
       else
-        response.parsed_response
+        [ response.parsed_response, response.headers ]
       end
     end
 
