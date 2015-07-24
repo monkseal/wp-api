@@ -29,6 +29,14 @@ module WP::API
       resource_post('comments', data)
     end
 
+    def categories(query = {})
+      sub_resources('terms', 'category', query)
+    end
+
+    def tags(query = {})
+      sub_resources('terms', 'tag', query)
+    end
+
     def pages(query = {})
       resources('pages', query)
     end
@@ -61,6 +69,13 @@ module WP::API
     def resource(res, id, query = {})
       resources, headers = get_request("#{res}/#{id}", query)
       resource_class(res).new(resources, headers)
+    end
+
+    def sub_resources(res, sub, query = {})
+      resources, headers = get_request("#{res}/#{sub}", query)
+      resources.collect do |hash|
+        resource_class(sub).new(hash, headers)
+      end
     end
 
     def resource_post(res, data = {})

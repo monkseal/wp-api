@@ -10,12 +10,14 @@ module WP::API
       _remove_entities(super)
     end
 
-    def categories
-      terms['category'].collect {|cat| WP::API::Category.new(cat) }
+    def categories(client = nil, query = {})
+      return if client.nil?
+      client.categories query.merge(post: id)
     end
 
-    def tags
-      terms['post_tag'].collect {|cat| WP::API::Tag.new(cat) }
+    def tags(client = nil, query = {})
+      return if client.nil?
+      client.tags query.merge(post: id)
     end
 
     def prev
