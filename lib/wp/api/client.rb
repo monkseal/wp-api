@@ -12,7 +12,7 @@ module WP::API
 
     DIRECT_PARAMS = %w(type context filter)
 
-    def initialize(host:, scheme: 'http', user: nil, password: nil, v: 1)
+    def initialize(host:, scheme: 'http', user: nil, password: nil, v: 2)
       @scheme   = scheme
       @host     = host
       @user     = user
@@ -87,7 +87,7 @@ module WP::API
       filter_hash = { page: query.delete('page') || 1 }
       query.each do |key, value|
         filter_hash[key] = value if DIRECT_PARAMS.include?(key) || key.include?('[')
-        filter_hash["filter[#{key}]"] = value
+        filter_hash[key] = value
       end
       uri.query_values = filter_hash
 
