@@ -29,10 +29,10 @@ module WP::API
     protected
 
     def get_request(resource, query = {})
-      should_raise_on_empty = query.delete(:should_raise_on_empty) || true
+      should_raise_on_empty = query.delete(:should_raise_on_empty) { true }
       query = ActiveSupport::HashWithIndifferentAccess.new(query)
       path = url_for(resource, query)
-      
+
       response = if authenticate?
         Client.get(path, basic_auth: { username: @user, password: @password })
       else

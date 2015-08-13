@@ -65,6 +65,10 @@ module WP::API
       resource('users', id, query)
     end
 
+    def media(query = {})
+      resources('media', query)
+    end
+
     private
 
     def resources(res, query = {})
