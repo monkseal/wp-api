@@ -59,9 +59,9 @@ module WP::API
       end
 
       if !(200..201).include? response.code
-        raise WP::API::ResourceNotFoundError
+        raise WP::API::ResourceInvalid, response.parsed_response
       elsif (response.parsed_response.nil? || response.parsed_response.empty?) && should_raise_on_empty
-        raise WP::API::ResourceNotFoundError
+        raise WP::API::ResourceNotFoundError, response.parsed_response
       else
         [ response.parsed_response, response.headers ]
       end
