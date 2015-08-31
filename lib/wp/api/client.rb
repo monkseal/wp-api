@@ -23,7 +23,7 @@ module WP::API
     end
 
     def inspect
-      to_s.sub(/>$/, '') + " @scheme=\"#{@scheme}\" @host=\"#{@host}\" @user=\"#{@user}\" @password=#{@password.present?}>"
+      to_s.sub(/>$/, '') + " @scheme=\"#{@scheme}\" @host=\"#{@host}\" @user=\"#{@user}\" @password=#{@password}>"
     end
 
     protected
@@ -51,12 +51,12 @@ module WP::API
     def post_request(resource, data = {})
       should_raise_on_empty = data.delete(:should_raise_on_empty) || true
       path = url_for(resource, {})
-
-      response = if authenticate?
-        Client.post(path, { :body => data, basic_auth: { username: @user, password: @password } })
-      else
-        Client.post(path, { :body => data })
-      end
+      response =
+        if authenticate?
+          Client.post(path, { :body => data, basic_auth: { username: @user, password: @password } })
+        else
+          Client.post(path, { :body => data })
+        end
 
       if !(200..201).include? response.code
         raise WP::API::ResourceInvalid, response.parsed_response

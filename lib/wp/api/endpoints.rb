@@ -13,6 +13,10 @@ module WP::API
       resource_post('posts', data)
     end
 
+    def add_post_meta(post_id, data = {})
+      resource_post("posts/#{post_id}/meta", data)
+    end
+
     def post_named(slug)
       resource_named('posts', slug)
     end
@@ -78,25 +82,29 @@ module WP::API
     def resources(res, query = {})
       resources, headers = get_request(res, query)
       resources.collect do |hash|
-        resource_class(res).new(hash, headers)
+        klass = resource_class(res)
+        klass ? klass.new(hash, headers) : hash
       end
     end
 
     def resource(res, id, query = {})
       resources, headers = get_request("#{res}/#{id}", query)
-      resource_class(res).new(resources, headers)
+      klass = resource_class(res)
+      klass ? klass.new(resources, headers) : resources
     end
 
     def sub_resources(res, sub, query = {})
       resources, headers = get_request("#{res}/#{sub}", query)
       resources.collect do |hash|
-        resource_class(sub).new(hash, headers)
+        klass = resource_class(sub)
+        klass ? klass.new(hash, headers) : hash
       end
     end
 
     def resource_post(res, data = {})
       resources, headers = post_request("#{res}", data)
-      resource_class(res).new(resources, headers)
+      klass = resource_class(res)
+      klass ? klass.new(resources, headers) : resources
     end
 
     def resource_subpath(res, id, subpath, query = {})
@@ -110,6 +118,8 @@ module WP::API
 
     def resource_class(res)
       WP::API::const_get(res.classify)
+    rescue NameError
+      nil
     end
 
   end

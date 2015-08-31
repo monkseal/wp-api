@@ -2,6 +2,10 @@ require 'htmlentities'
 
 module WP::API
   class Post < Resource
+    def post_id
+      attributes['ID']
+    end
+
     def title
       _remove_entities(super)
     end
